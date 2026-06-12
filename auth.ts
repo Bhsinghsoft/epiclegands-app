@@ -1,86 +1,71 @@
-import NextAuth from 'next-auth'
-import Credentials from 'next-auth/providers/credentials'
-import Google from 'next-auth/providers/google'
-import { dbConnect } from '@/lib/db'
-import { User } from '@/lib/models'
-import bcrypt from 'bcryptjs'
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import bcrypt from "bcryptjs";
+import { dbConnect } from "@/lib/db";
+import { User } from "@/lib/models";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
-    Credentials({
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
+      },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error('Invalid credentials')
+          throw new Error("Email and password required");
         }
 
-        await dbConnect()
+        await dbConnect();
+        const user = await User.findOne({ email: credentials.email });
 
-        const user = await User.findOne({ email: credentials.email })
+        if (!user) {
+          throw new Error("User not found");
+        }
 
-        if (
-          !user ||
-          !user.password ||
-          !(await bcrypt.compare(credentials.password as string, user.password))
-        ) {
-          throw new Error('Invalid email or password')
+        const isValid = await bcrypt.compare(credentials.password as string, user.password);
+
+        if (!isValid) {
+          throw new Error("Invalid password");
         }
 
         return {
           id: user._id.toString(),
           email: user.email,
           name: user.name,
-          image: user.image,
           role: user.role,
-        }
-      },
-    }),
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
+        };
+      }
+    })
   ],
-  pages: {
-    signIn: '/auth/signin',
-  },
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
-        token.id = user.id
-        token.role = (user as any).role
+        token.role = user.role;
+        token.id = user.id;
       }
-      if (account?.provider === 'google') {
-        await dbConnect()
-        let dbUser = await User.findOne({ email: token.email })
-
-        if (!dbUser) {
-          dbUser = new User({
-            email: token.email,
-            name: token.name,
-            image: token.picture,
-            role: 'user',
-            accounts: [
-              {
-                provider: 'google',
-                providerAccountId: account.providerAccountId,
-                type: account.type,
-                access_token: account.access_token,
-                refresh_token: account.refresh_token,
-              },
-            ],
-          })
-          await dbUser.save()
-        }
-        token.id = dbUser._id.toString()
-        token.role = dbUser.role
-      }
-      return token
+      return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.id
-        (session.user as any).role = token.role
+        session.user.role = token.role as string;
+        session.user.id = token.id as string;
       }
-      return session
-    },
+      return session;
+    }
   },
-})
+  pages: {
+    signIn: "/auth/signin",
+    error: "/auth/error",
+  },
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+});

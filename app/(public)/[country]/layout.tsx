@@ -12,13 +12,20 @@ const COUNTRIES = {
   'canada': { name: 'Canada', flag: '🇨🇦', currency: 'CAD', code: 'CA' },
 }
 
-export function generateMetadata({ params }: { params: { country: string } }): Metadata {
-  const country = COUNTRIES[params.country as keyof typeof COUNTRIES]
+// ✅ FIX 1: Make generateMetadata async and await params
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ country: string }> 
+}): Promise<Metadata> {
+  const { country: countryCode } = await params
+  const country = COUNTRIES[countryCode as keyof typeof COUNTRIES]
+  
   const title = country
     ? `Epic Legends | Premium Spices Export to ${country.name}`
     : 'Epic Legends | Global Spice Export'
   const description = country
-    ? `Premium spices and agricultural products tailored for ${country.name} importers`
+    ? `Premium spices and agricultural products tailored for ${country.name} importers. MOQ, HS codes, container loads available.`
     : 'Premium spices and agricultural products for global importers'
 
   return {
@@ -27,20 +34,23 @@ export function generateMetadata({ params }: { params: { country: string } }): M
   }
 }
 
+// ✅ generateStaticParams remains same (no change needed)
 export function generateStaticParams() {
   return Object.keys(COUNTRIES).map((country) => ({
     country,
   }))
 }
 
-export default function CountryLayout({
+// ✅ FIX 2: Make layout async and await params
+export default async function CountryLayout({
   children,
   params,
 }: {
   children: React.ReactNode
-  params: { country: string }
+  params: Promise<{ country: string }>
 }) {
-  const country = COUNTRIES[params.country as keyof typeof COUNTRIES]
+  const { country: countryCode } = await params
+  const country = COUNTRIES[countryCode as keyof typeof COUNTRIES]
 
   if (!country) {
     return (
