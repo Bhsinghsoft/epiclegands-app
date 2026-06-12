@@ -1,190 +1,282 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Certifications } from '@/components/Certifications';
 
-export default function Page() {
+import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { 
+  ArrowRight, TrendingUp, Users, Package, Globe, 
+  Shield, Clock, Award, Star, Truck, Leaf, CheckCircle,
+  Download, Calendar, Phone, MessageCircle, FileText
+} from 'lucide-react';
+import { Testimonials } from '@/components/Testimonials';
+
+export default function HomePage() {
   return (
-    <main className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="text-2xl font-bold text-primary">Epic Legends</div>
-          <div className="flex gap-4">
-            <Link href="/auth/signin">
-              <Button variant="outline">Sign In</Button>
-            </Link>
-            <Link href="/auth/register">
-              <Button>Get Started</Button>
+    <div className="min-h-screen bg-gradient-to-b from-white via-emerald-50/20 to-white">
+      
+      {/* Hero Section - Improved with 5 CTAs */}
+      <section className="relative overflow-hidden pt-20 pb-16 md:pt-28 md:pb-24">
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/5 to-teal-600/5" />
+        <div className="absolute top-20 right-10 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-10 w-72 h-72 bg-teal-200/30 rounded-full blur-3xl" />
+        
+        <div className="relative mx-auto max-w-7xl px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 border border-emerald-200 mb-6">
+                <Shield className="w-4 h-4 text-emerald-600" />
+                <span className="text-sm text-emerald-700 font-medium">India's Premier Export Partner</span>
+              </div>
+              
+              <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+                India's{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600">
+                  Trusted Export Gateway
+                </span>
+              </h1>
+              
+              <p className="text-lg text-slate-600 mb-8 max-w-xl mx-auto lg:mx-0">
+                Connecting international buyers with verified Indian suppliers across spices, 
+                commodities, and agricultural produce — from farm to destination.
+              </p>
+              
+              {/* ✅ 5 CTAs as per PDF Page 9 */}
+              <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                <Link href="/products">
+                  <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 rounded-xl px-6">
+                    Request Quote
+                  </Button>
+                </Link>
+                <Link href="/catalogue.pdf">
+                  <Button variant="outline" className="rounded-xl border-emerald-200">
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Catalogue
+                  </Button>
+                </Link>
+                <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" className="rounded-xl border-green-200 text-green-600 hover:bg-green-50">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    WhatsApp
+                  </Button>
+                </a>
+                <button className="rounded-xl px-4 py-2 text-emerald-600 border border-emerald-200 hover:bg-emerald-50 transition-colors">
+                  <Calendar className="w-4 h-4 mr-2 inline" />
+                  Schedule Meeting
+                </button>
+              </div>
+              
+              {/* Trust Indicators */}
+              <div className="mt-8 flex flex-wrap gap-6 justify-center lg:justify-start">
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <Award className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Certifications</p>
+                    <p className="font-semibold text-slate-800">8+ Global</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <Truck className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Countries Served</p>
+                    <p className="font-semibold text-slate-800">25+</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <Package className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Products</p>
+                    <p className="font-semibold text-slate-800">50+</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Content - Stats Card */}
+            <div className="hidden lg:block">
+              <div className="bg-white rounded-3xl shadow-2xl p-8 border border-emerald-100">
+                <div className="grid grid-cols-2 gap-6">
+                  {[
+                    { icon: Users, value: '500+', label: 'Global Clients' },
+                    { icon: Package, value: '50+', label: 'Products' },
+                    { icon: Globe, value: '25+', label: 'Countries' },
+                    { icon: TrendingUp, value: '99%', label: 'Satisfaction' },
+                  ].map((stat, i) => (
+                    <div key={i} className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50">
+                      <stat.icon className="w-8 h-8 text-emerald-500 mb-2" />
+                      <div className="text-2xl font-bold text-slate-800">{stat.value}</div>
+                      <div className="text-xs text-slate-500">{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-center">
+                  <p className="text-sm">Export Capability</p>
+                  <p className="text-xl font-bold">20+ Containers Monthly</p>
+                  <p className="text-2xl font-bold mt-2">FCL/LCL Worldwide</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Bar */}
+      <section className="border-y border-emerald-100 bg-white py-12">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { value: '10+', label: 'Years Experience', icon: Clock },
+              { value: '25+', label: 'Export Countries', icon: Globe },
+              { value: '500+', label: 'Happy Clients', icon: Users },
+              { value: '100%', label: 'Quality Assured', icon: CheckCircle },
+            ].map((stat, i) => (
+              <div key={i} className="text-center">
+                <stat.icon className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
+                <div className="text-3xl font-bold text-slate-800">{stat.value}</div>
+                <div className="text-sm text-slate-500">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ✅ Certifications Wall (NEW) */}
+      <Certifications />
+
+      {/* Products Preview */}
+      <section className="py-20 px-4">
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Premium{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-500">
+                Export Products
+              </span>
+            </h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">
+              Export-quality spices with complete traceability from farm to port
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { name: 'Turmeric Powder', origin: 'Sangli, India', moq: '1,000 KG', price: '$5-8/kg', rating: 4.9, emoji: '🟡' },
+              { name: 'Black Pepper', origin: 'Kerala, India', moq: '500 KG', price: '$8-12/kg', rating: 4.8, emoji: '⚫' },
+              { name: 'Cardamom', origin: 'Idukki, India', moq: '300 KG', price: '$15-20/kg', rating: 4.9, emoji: '🟢' },
+              { name: 'Cumin Seeds', origin: 'Gujarat, India', moq: '1,500 KG', price: '$6-10/kg', rating: 4.7, emoji: '🟤' },
+            ].map((product, i) => (
+              <Link key={i} href={`/products/${i + 1}`}>
+                <div className="group bg-white rounded-2xl overflow-hidden border border-emerald-100 hover:shadow-2xl hover:shadow-emerald-100 transition-all duration-500 hover:-translate-y-2">
+                  <div className="h-32 bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
+                    <span className="text-6xl">{product.emoji}</span>
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-bold text-slate-800 text-lg group-hover:text-emerald-600 transition-colors">
+                      {product.name}
+                    </h3>
+                    <p className="text-xs text-slate-500 mb-3">{product.origin}</p>
+                    <div className="flex items-center gap-1 mb-3">
+                      <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                      <span className="text-sm font-medium">{product.rating}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="text-xs text-slate-500">MOQ</p>
+                        <p className="font-semibold text-sm">{product.moq}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-slate-500">Price</p>
+                        <p className="font-bold text-emerald-600">{product.price}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <Link href="/products">
+              <Button variant="outline" className="rounded-xl">
+                View All Products
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
             </Link>
           </div>
         </div>
-      </nav>
+      </section>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10 px-4 py-20 sm:px-6 lg:px-8">
+      {/* ✅ B2B Testimonials (NEW) */}
+      <Testimonials />
+
+      {/* Why Choose Us - 6 Pillars */}
+      <section className="py-20 px-4 bg-white">
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Why Choose{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-500">
+                Epic Legends
+              </span>
+            </h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">
+              Six pillars that make us your trusted export partner
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: Clock, title: '10+ Years Experience', desc: 'Building corridors into GCC, Western Europe and North America' },
+              { icon: Users, title: 'Expert Team', desc: 'Procurement, QC, packaging, documentation across functions' },
+              { icon: Shield, title: 'Quality Testing', desc: 'Lab reports per lot - moisture, purity, oil content' },
+              { icon: Truck, title: 'Global Shipping', desc: 'CFR, CIF, FOB, DDP. Mundra, Nhava Sheva & Pipavav' },
+              { icon: Award, title: 'Private Label', desc: 'Custom artwork, retail packs, regulatory labels' },
+              { icon: Package, title: 'Bulk Order Handling', desc: 'Single SKU to mixed-SKU consolidation from 1MT MOQ' },
+            ].map((item, i) => (
+              <div key={i} className="group p-6 rounded-2xl bg-gradient-to-br from-slate-50 to-white border border-slate-100 hover:border-emerald-200 hover:shadow-xl transition-all hover:-translate-y-1">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <item.icon className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="font-bold text-slate-800 text-lg mb-2">{item.title}</h3>
+                <p className="text-sm text-slate-500">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-16 text-white">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="text-balance text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
-            Premium Spices & Agricultural Products Global Export
-          </h1>
-          <p className="mt-6 text-balance text-xl text-muted-foreground">
-            Connecting Indian exporters with global importers. Trusted by businesses in 50+ countries.
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Source Premium Spices?</h2>
+          <p className="text-emerald-100 mb-8">
+            Get a free quote within 24 hours. No minimum order for samples.
           </p>
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/products">
-              <Button size="lg" className="w-full sm:w-auto">
+              <Button className="bg-white text-emerald-600 hover:bg-gray-100 rounded-xl px-8">
                 Browse Products
               </Button>
             </Link>
             <Link href="/auth/register">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                Become an Exporter
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="border-y border-border px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { label: 'Countries Served', value: '50+' },
-              { label: 'Products', value: '200+' },
-              { label: 'Active Exporters', value: '150+' },
-              { label: 'Annual Export Value', value: '$50M+' },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-4xl font-bold text-primary">{stat.value}</div>
-                <div className="mt-2 text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Products */}
-      <section className="px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">Featured Products</h2>
-          <p className="mt-2 text-muted-foreground">
-            Our most popular export items across multiple categories
-          </p>
-          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              { name: 'Turmeric Powder', moq: '1000 KG', price: '$5-8/KG' },
-              { name: 'Black Pepper', moq: '500 KG', price: '$8-12/KG' },
-              { name: 'Cumin Seeds', moq: '1500 KG', price: '$6-10/KG' },
-              { name: 'Cardamom', moq: '300 KG', price: '$15-20/KG' },
-              { name: 'Coriander Seeds', moq: '2000 KG', price: '$4-7/KG' },
-              { name: 'Red Chili', moq: '1200 KG', price: '$7-11/KG' },
-            ].map((product) => (
-              <div
-                key={product.name}
-                className="rounded-lg border border-border bg-card p-6 transition-shadow hover:shadow-lg"
-              >
-                <h3 className="font-semibold text-foreground">{product.name}</h3>
-                <div className="mt-4 space-y-2 text-sm text-muted-foreground">
-                  <p>MOQ: {product.moq}</p>
-                  <p className="font-semibold text-primary">{product.price}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-12 text-center">
-            <Link href="/products">
-              <Button variant="outline" size="lg">
-                View All Products
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Certifications */}
-      <section className="border-t border-border bg-card/50 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-3xl font-bold tracking-tight text-foreground">
-            Certified & Trusted
-          </h2>
-          <div className="mt-12 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
-            {[
-              'ISO 9001:2015',
-              'FDA Approved',
-              'FSSAI Certified',
-              'Organic Certified',
-              'Fair Trade',
-            ].map((cert) => (
-              <div key={cert} className="flex items-center justify-center rounded-lg border border-border bg-background p-6">
-                <div className="text-center text-sm font-semibold text-foreground">{cert}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="bg-primary px-4 py-20 sm:px-6 lg:px-8 text-white">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold">Ready to Get Started?</h2>
-          <p className="mt-4 text-lg text-white/90">
-            Join thousands of importers sourcing premium spices and agricultural products from India.
-          </p>
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">
-            <Link href="/auth/register">
-              <Button size="lg" variant="secondary" className="w-full sm:w-auto">
+              <Button variant="outline" className="border-white text-white hover:bg-white/10 rounded-xl px-8">
                 Register as Importer
               </Button>
             </Link>
-            <Link href="mailto:contact@epiclegends.com">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                Contact Sales
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-card px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-            <div>
-              <div className="text-lg font-bold text-primary">Epic Legends</div>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Premium spices and agricultural products from India
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground">Quick Links</h3>
-              <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <Link href="/products" className="hover:text-primary">
-                    Products
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-primary">
-                    About Us
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground">Contact</h3>
-              <p className="mt-4 text-sm text-muted-foreground">
-                Email: contact@epiclegends.com
-                <br />
-                Phone: +91 XXXX-XXX-XXXX
-              </p>
-            </div>
-          </div>
-          <div className="mt-8 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 Epic Legends. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-    </main>
-  )
+      {/* WhatsApp Floating Button (NEW) */}
+      <WhatsAppButton />
+    </div>
+  );
 }

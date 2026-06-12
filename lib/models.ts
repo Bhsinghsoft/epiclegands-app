@@ -29,26 +29,26 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-// Product Schema
+// ✅ Product Schema - UPDATED with all fields from admin panel
 const productSchema = new mongoose.Schema(
   {
-    name: String,
-    description: String,
-    sku: { type: String, unique: true },
-    hsCode: String,
-    moq: Number,
-    containerLoad: String,
-    packaging: String,
-    image: String,
-    images: [String],
-    category: String,
-    supportsPrivateLabel: Boolean,
-    specifications: {
-      origin: String,
-      color: String,
-      size: String,
-      certifications: [String],
-    },
+    // Basic Info
+    name: { type: String, required: true },
+    category: { type: String, default: 'Spices' },
+    origin: { type: String },
+    hsCode: { type: String },
+    
+    // Export Details
+    moq: { type: String },  // Changed from Number to String (e.g., "1,000 KG")
+    containerLoad: { type: String },
+    
+    // Pricing
+    price: { type: String },  // Formatted price string (e.g., "$5-8/kg")
+    priceMin: { type: String },
+    priceMax: { type: String },
+    currency: { type: String, default: 'USD' },
+    
+    // Pricing by country (existing)
     pricing: [
       {
         countryId: mongoose.Schema.Types.ObjectId,
@@ -57,8 +57,60 @@ const productSchema = new mongoose.Schema(
         currency: String,
       },
     ],
-    stock: Number,
-    active: { type: Boolean, default: true },
+    
+    // Features
+    privateLabel: { type: Boolean, default: false },  // renamed from supportsPrivateLabel
+    supportsPrivateLabel: { type: Boolean, default: false }, // keep for backward compatibility
+    
+    // Descriptions
+    description: { type: String },  // Short description
+    fullDescription: { type: String },  // Long description for detail page
+    
+    // Inventory
+    stock: { type: String },  // Changed from Number to String (e.g., "15,000 KG")
+    
+    // Quality & Shipping
+    qualityGrade: { type: String },
+    leadTime: { type: String, default: '15-20 days' },
+    
+    // Certifications (array of strings)
+    certifications: [{ type: String }],
+    
+    // Specifications (array of {label, value})
+    specifications: [
+      {
+        label: { type: String },
+        value: { type: String }
+      }
+    ],
+    
+    // Packaging options (array of strings)
+    packaging: [{ type: String }],
+    
+    // Shipping ports (array of strings)
+    shippingPorts: [{ type: String }],
+    
+    // Images
+    image: { type: String },
+    images: [{ type: String }],
+    
+    // Status
+    status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },
+    active: { type: Boolean, default: true }, // keep for backward compatibility
+    
+    // Rating
+    rating: { type: Number, default: 0 },
+    
+    // Legacy fields (for backward compatibility)
+    sku: { type: String, unique: true, sparse: true },
+    specifications_legacy: {
+      origin: String,
+      color: String,
+      size: String,
+      certifications: [String],
+    },
+    
+    // Created by
     createdBy: mongoose.Schema.Types.ObjectId,
   },
   { timestamps: true }
@@ -135,16 +187,10 @@ const testimonialSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-// Export models
+// ✅ Export models
 export const User = mongoose.models.User || mongoose.model('User', userSchema)
-export const Product =
-  mongoose.models.Product || mongoose.model('Product', productSchema)
-export const Country =
-  mongoose.models.Country || mongoose.model('Country', countrySchema)
+export const Product = mongoose.models.Product || mongoose.model('Product', productSchema)
+export const Country = mongoose.models.Country || mongoose.model('Country', countrySchema)
 export const Order = mongoose.models.Order || mongoose.model('Order', orderSchema)
-export const Certification =
-  mongoose.models.Certification ||
-  mongoose.model('Certification', certificationSchema)
-export const Testimonial =
-  mongoose.models.Testimonial ||
-  mongoose.model('Testimonial', testimonialSchema)
+export const Certification = mongoose.models.Certification || mongoose.model('Certification', certificationSchema)
+export const Testimonial = mongoose.models.Testimonial || mongoose.model('Testimonial', testimonialSchema)

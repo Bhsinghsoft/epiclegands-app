@@ -2,7 +2,9 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import { OrganizationJsonLd } from '@/components/json-ld'
+import { SessionProvider } from 'next-auth/react'  // ✅ Add this import
 import './globals.css'
+import { Navbar } from '@/components/Navbar'
 
 const poppins = Poppins({
   variable: '--font-poppins',
@@ -54,7 +56,11 @@ export default function RootLayout({
         <OrganizationJsonLd />
       </head>
       <body className="font-sans antialiased text-foreground">
-        {children}
+        {/* ✅ Wrap with SessionProvider */}
+        <SessionProvider>
+          <Navbar />
+          {children}
+        </SessionProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

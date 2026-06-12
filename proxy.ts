@@ -1,14 +1,32 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const SUPPORTED_COUNTRIES = ['ae', 'sa', 'us', 'gb', 'de', 'nl', 'au'];
-const DEFAULT_COUNTRY = 'ae';
+// ✅ Line 1: India add karo supported countries mein
+const SUPPORTED_COUNTRIES = ['india', 'uae', 'usa', 'uk', 'singapore', 'australia', 'canada', 'ae', 'sa', 'us', 'gb', 'de', 'nl', 'au'];
+
+// ✅ Line 2: Default country 'india' rakho
+const DEFAULT_COUNTRY = 'india';  // Changed from 'uae' to 'india'
+
 const EXCLUDED_PATHS = ['auth', 'api', '_next', 'favicon.ico', 'sitemap.xml', 'robots.txt'];
 
 function detectCountry(request: NextRequest): string {
   const geoCountry = (request as any).geo?.country?.toLowerCase();
-  if (geoCountry && SUPPORTED_COUNTRIES.includes(geoCountry)) {
-    return geoCountry;
+  // Map geo country codes to your country codes
+  const geoMap: Record<string, string> = {
+    'ae': 'uae',
+    'sa': 'uae',
+    'us': 'usa',
+    'gb': 'uk',
+    'de': 'uae',
+    'nl': 'uae',
+    'au': 'australia',
+    'ca': 'canada',
+    'in': 'india',      
+    'sg': 'singapore',
+  };
+  
+  if (geoCountry && geoMap[geoCountry]) {
+    return geoMap[geoCountry];
   }
   
   const urlCountry = request.nextUrl.pathname.split('/')[1];
@@ -24,15 +42,18 @@ function detectCountry(request: NextRequest): string {
   const acceptLanguage = request.headers.get('accept-language');
   if (acceptLanguage) {
     const browserLang = acceptLanguage.split(',')[0].split('-')[1]?.toLowerCase();
-    if (browserLang && SUPPORTED_COUNTRIES.includes(browserLang)) {
-      return browserLang;
+    const langMap: Record<string, string> = {
+      'ae': 'uae', 'sa': 'uae', 'us': 'usa', 'gb': 'uk',
+      'au': 'australia', 'ca': 'canada', 'in': 'india', 'sg': 'singapore'
+    };
+    if (browserLang && langMap[browserLang]) {
+      return langMap[browserLang];
     }
   }
   
   return DEFAULT_COUNTRY;
 }
 
-// ✅ Change: "middleware" to "proxy"
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const pathSegments = pathname.split('/').filter(Boolean);
@@ -48,18 +69,12 @@ export function proxy(request: NextRequest) {
     return response;
   }
   
+  // Don't redirect / - serve normal homepage
   if (pathname === '/') {
-    const country = detectCountry(request);
-    const response = NextResponse.redirect(new URL(`/${country}`, request.url));
-    response.cookies.set('preferred-country', country, { maxAge: 30 * 24 * 60 * 60 });
-    return response;
+    return NextResponse.next();
   }
   
-  const country = detectCountry(request);
-  const newPathname = `/${country}${pathname}`;
-  const response = NextResponse.redirect(new URL(newPathname, request.url));
-  response.cookies.set('preferred-country', country, { maxAge: 30 * 24 * 60 * 60 });
-  return response;
+  return NextResponse.next();
 }
 
 export const config = {

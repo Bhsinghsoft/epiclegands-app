@@ -6,11 +6,11 @@ const COUNTRIES = {
   'uae': { name: 'United Arab Emirates', flag: '🇦🇪', currency: 'AED', code: 'AE' },
   'usa': { name: 'United States', flag: '🇺🇸', currency: 'USD', code: 'US' },
   'uk': { name: 'United Kingdom', flag: '🇬🇧', currency: 'GBP', code: 'GB' },
-  'india': { name: 'India', flag: '🇮🇳', currency: 'INR', code: 'IN' },
+  'india': { name: 'India', flag: '🇮🇳', currency: 'INR', code: 'IN' },  // ✅ Already present
   'singapore': { name: 'Singapore', flag: '🇸🇬', currency: 'SGD', code: 'SG' },
   'australia': { name: 'Australia', flag: '🇦🇺', currency: 'AUD', code: 'AU' },
   'canada': { name: 'Canada', flag: '🇨🇦', currency: 'CAD', code: 'CA' },
-}
+};
 
 // ✅ FIX 1: Make generateMetadata async and await params
 export async function generateMetadata({ 

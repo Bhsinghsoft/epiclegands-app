@@ -1,43 +1,67 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { signIn } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { useSession } from 'next-auth/react';
 
 export default function SignInPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { data: session } = useSession(); // ✅ Get session
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
     try {
       const result = await signIn('credentials', {
         email,
         password,
         redirect: false,
-      })
+      });
 
       if (!result?.ok) {
-        setError(result?.error || 'Invalid credentials')
-        return
+        setError(result?.error || 'Invalid credentials');
+        return;
       }
 
-      router.push(searchParams.get('callbackUrl') || '/dashboard')
+      // ✅ Wait a bit for session to be set
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // ✅ Fetch fresh session to get role
+      const response = await fetch('/api/auth/session');
+      const sessionData = await response.json();
+      const userRole = sessionData?.user?.role;
+      
+      // ✅ Role-based redirect
+      let callbackUrl = '/dashboard'; // Default
+      
+      if (userRole === 'admin') {
+        callbackUrl = '/admin';  // Admin goes to admin panel
+      } else {
+        callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+      }
+      
+      console.log('User role:', userRole);
+      console.log('Redirecting to:', callbackUrl);
+      
+      window.location.href = callbackUrl;
+      
     } catch (err) {
-      setError('An error occurred. Please try again.')
+      console.error('SignIn error:', err);
+      setError('An error occurred. Please try again.');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -120,5 +144,5 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

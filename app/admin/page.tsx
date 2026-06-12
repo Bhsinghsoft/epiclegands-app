@@ -8,6 +8,7 @@ const DASHBOARD_STATS = [
   { label: 'Total Revenue', value: '$125,400', change: '+8%' },
   { label: 'Active Products', value: '45', change: '+3' },
   { label: 'Total Customers', value: '320', change: '+25' },
+  { label: 'Certifications', value: '8',  change: 'All active' },
 ]
 
 const RECENT_ORDERS = [
@@ -182,6 +183,13 @@ export default function AdminDashboard() {
                 <div>View Reports</div>
               </Button>
             </Link>
+
+            <Link href="/admin/certifications">
+  <Button variant="outline" className="h-24 w-full flex-col gap-2">
+    <div className="text-2xl">🏆</div>
+    <div>Certifications</div>
+  </Button>
+</Link>
           </div>
         </div>
       </section>
